@@ -21,7 +21,7 @@ RUN dnf update -y && dnf upgrade -y && dnf clean all
 RUN yum -y install man man-pages man-pages-ja && yum clean all
 
 # install tools
-RUN yum install -y \
+RUN dnf install -y \
         ansible \
         bash-completion \
         bind-utils \
@@ -51,17 +51,17 @@ RUN yum install -y \
         w3m \
         wget \
         zip \
-    && yum clean all
+    && dnf clean all
 
 # upgrade pip
 # RUN pip install --upgrade pip
 
 # install nodejs npm
-RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash -
-RUN yum install -y nodejs && npm update -g
+#RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+#RUN yum install -y nodejs && npm update -g
 
 # install docker client see https://download.docker.com/linux/static/stable/x86_64/
-ARG DOCKERURL=https://download.docker.com/linux/static/stable/x86_64/docker-20.10.6.tgz
+ARG DOCKERURL=https://download.docker.com/linux/static/stable/x86_64/docker-20.10.9.tgz
 RUN curl -fSL "$DOCKERURL" -o docker.tgz \
     && tar -xzvf docker.tgz \
     && mv docker/* /usr/bin/ \
@@ -82,15 +82,8 @@ RUN echo "" >> /etc/yum.repos.d/kubernetes.repo && \
 # RUN yum install -y kubectl-${KUBECTL_CLIENT_VERSION} && yum clean all
 RUN yum install -y kubectl && yum clean all
 
-# install helm CLI v2.9.1
-ENV HELM_CLIENT_VERSION v2.9.1
-RUN curl -fLO https://storage.googleapis.com/kubernetes-helm/helm-${HELM_CLIENT_VERSION}-linux-amd64.tar.gz && \
-    tar xzf  helm-${HELM_CLIENT_VERSION}-linux-amd64.tar.gz && \
-    /bin/cp  linux-amd64/helm   /usr/bin/helm2 && \
-    /bin/rm -rf rm helm-${HELM_CLIENT_VERSION}-linux-amd64.tar.gz linux-amd64
-
-# install helm CLI v3.5.4
-ENV HELM3_VERSION v3.5.4
+# install helm CLI
+ENV HELM3_VERSION v3.7.2
 RUN curl -fLO https://get.helm.sh/helm-${HELM3_VERSION}-linux-amd64.tar.gz && \
     tar xzf  helm-${HELM3_VERSION}-linux-amd64.tar.gz && \
     /bin/cp  linux-amd64/helm   /usr/bin && \
@@ -98,24 +91,25 @@ RUN curl -fLO https://get.helm.sh/helm-${HELM3_VERSION}-linux-amd64.tar.gz && \
     /bin/rm -rf rm helm-${HELM3_VERSION}-linux-amd64.tar.gz linux-amd64
 
 # install kompose v1.18.0
-ENV KOMPOSE_VERSION v1.18.0
-RUN curl -fLO https://github.com/kubernetes/kompose/releases/download/${KOMPOSE_VERSION}/kompose-linux-amd64.tar.gz && \
-    tar xzf kompose-linux-amd64.tar.gz && \
-    chmod +x kompose-linux-amd64 && \
-    mv kompose-linux-amd64 /usr/bin/kompose && \
-    rm kompose-linux-amd64.tar.gz
+#ENV KOMPOSE_VERSION v1.18.0
+#RUN curl -fLO https://github.com/kubernetes/kompose/releases/download/${KOMPOSE_VERSION}/kompose-linux-amd64.tar.gz && \
+#    tar xzf kompose-linux-amd64.tar.gz && \
+#    chmod +x kompose-linux-amd64 && \
+#    mv kompose-linux-amd64 /usr/bin/kompose && \
+#    rm kompose-linux-amd64.tar.gz
 
 # install stern
-ENV STERN_VERSION 1.10.0
+ENV STERN_VERSION 1.11.0
 RUN curl -fLO https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64 && \
     chmod +x stern_linux_amd64 && \
     mv stern_linux_amd64 /usr/bin/stern
 
 # install kustomize
-ENV KUSTOMIZE_VERSION 1.0.11
-RUN curl -fLO https://github.com/kubernetes-sigs/kustomize/releases/download/v${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64 && \
-    chmod +x kustomize_${KUSTOMIZE_VERSION}_linux_amd64 && \
-    mv kustomize_${KUSTOMIZE_VERSION}_linux_amd64 /usr/bin/kustomize
+ENV KUSTOMIZE_VERSION 4.4.1
+RUN curl -fLO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
+    tar xvzf kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
+    mv kustomize /usr/bin/kustomize && \
+    rm kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz
 
 # install kubectx, kubens. see https://github.com/ahmetb/kubectx
 RUN curl -fLO https://raw.githubusercontent.com/ahmetb/kubectx/master/kubectx && \
@@ -140,7 +134,8 @@ RUN curl -fLO https://github.com/garethr/kubetest/releases/download/$KUBETEST_VE
 # install yamlsort see https://github.com/george-pon/yamlsort
 ENV YAMLSORT_VERSION v0.1.19
 RUN curl -fLO https://github.com/george-pon/yamlsort/releases/download/${YAMLSORT_VERSION}/linux_amd64_yamlsort_${YAMLSORT_VERSION}.tar.gz && \
-    tar xzf linux_amd64_yamlsort_${YAMLSORT_VERSION}.tar.gz && \
+    tar --version && \
+    tar xzf linux_amd64_yamlsort_${YAMLSORT_VERSION}.tar.gz --no-same-owner && \
     chmod +x linux_amd64_yamlsort && \
     mv linux_amd64_yamlsort /usr/bin/yamlsort && \
     rm linux_amd64_yamlsort_${YAMLSORT_VERSION}.tar.gz
