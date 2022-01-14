@@ -3,9 +3,9 @@
 # リポジトリにpushする
 #
 
-TAG_LIST=$(awk '/^ENV MYORACLELINUX7DOCKER_VERSION/ {print $3;}' Dockerfile)
+TAG_LIST=$(awk '/^ENV MYORACLELINUX8DOCKER_VERSION/ {print $3;}' Dockerfile)
 TAG_LIST="$TAG_LIST monthly$(date +%Y%m) "
-IMAGE_NAME=$(awk '/^ENV MYORACLELINUX7DOCKER_IMAGE/ {print $3;}' Dockerfile)
+IMAGE_NAME=$(awk '/^ENV MYORACLELINUX8DOCKER_IMAGE/ {print $3;}' Dockerfile)
 
 REPO_SERV=${REPO_SERV:-docker.io/georgesan/}
 

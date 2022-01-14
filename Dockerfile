@@ -3,7 +3,7 @@ FROM oraclelinux:8
 ENV MYORACLELINUX8DOCKER_VERSION build-target
 ENV MYORACLELINUX8DOCKER_VERSION latest
 ENV MYORACLELINUX8DOCKER_VERSION stable
-ENV MYORACLELINUX8DOCKER_IMAGE myoraclelinux7docker
+ENV MYORACLELINUX8DOCKER_IMAGE myoraclelinux8docker
 
 
 # set install flag manual page
@@ -18,15 +18,12 @@ RUN dnf update -y && dnf upgrade -y && dnf clean all
 # ENV LANG ja_JP.UTF-8
 
 # install man, man-pages
-RUN yum -y install man man-pages man-pages-ja && yum clean all
+RUN dnf install -y man man-pages && dnf clean all
 
 # install tools
 RUN dnf install -y \
-        ansible \
         bash-completion \
         bind-utils \
-        connect \
-        connect-proxy \
         curl \
         emacs-nox \
         expect \
@@ -40,15 +37,13 @@ RUN dnf install -y \
         nmap-ncat \
         openssh-clients \
         openssh-server \
-        python-pip \
-        stress \
         sudo \
+        tar \
         tcpdump \
         traceroute \
         tree \
         unzip \
         vim \
-        w3m \
         wget \
         zip \
     && dnf clean all
@@ -63,7 +58,8 @@ RUN dnf install -y \
 # install docker client see https://download.docker.com/linux/static/stable/x86_64/
 ARG DOCKERURL=https://download.docker.com/linux/static/stable/x86_64/docker-20.10.9.tgz
 RUN curl -fSL "$DOCKERURL" -o docker.tgz \
-    && tar -xzvf docker.tgz \
+    && type tar \
+    && tar xzvf docker.tgz \
     && mv docker/* /usr/bin/ \
     && rmdir docker \
     && rm docker.tgz \
