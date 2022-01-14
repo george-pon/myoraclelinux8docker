@@ -1,16 +1,16 @@
 FROM oraclelinux:8
 
-ENV MYORACLELINUX7DOCKER_VERSION build-target
-ENV MYORACLELINUX7DOCKER_VERSION latest
-ENV MYORACLELINUX7DOCKER_VERSION stable
-ENV MYORACLELINUX7DOCKER_IMAGE myoraclelinux7docker
+ENV MYORACLELINUX8DOCKER_VERSION build-target
+ENV MYORACLELINUX8DOCKER_VERSION latest
+ENV MYORACLELINUX8DOCKER_VERSION stable
+ENV MYORACLELINUX8DOCKER_IMAGE myoraclelinux7docker
 
 
 # set install flag manual page
 RUN sed -i -e"s/^tsflags=nodocs/\# tsflags=nodocs/" /etc/yum.conf
 
 # update all packages
-RUN yum -y update && yum clean all
+RUN dnf update -y && dnf upgrade -y && dnf clean all
 
 # set locale to Japanese
 # RUN localedef -i ja_JP -f UTF-8 ja_JP.UTF-8

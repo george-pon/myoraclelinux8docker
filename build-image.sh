@@ -10,12 +10,12 @@ function cdr() {
 }
 
 function f_docker_build() {
-    TAG_LIST=$(awk '/^ENV MYORACLELINUX7DOCKER_VERSION/ {print $3;}' Dockerfile)
+    TAG_LIST=$(awk '/^ENV MYORACLELINUX8DOCKER_VERSION/ {print $3;}' Dockerfile)
     TAG_LIST="$TAG_LIST monthly$(date +%Y%m) "
     TAG_CAR=$(car $TAG_LIST)
     TAG_CDR=$(cdr $TAG_LIST)
     echo $TAG_CDR
-    IMAGE_NAME=${PREFIX}$(awk '/^ENV MYORACLELINUX7DOCKER_IMAGE/ {print $3;}' Dockerfile)
+    IMAGE_NAME=${PREFIX}$(awk '/^ENV MYORACLELINUX8DOCKER_IMAGE/ {print $3;}' Dockerfile)
 
     if [ ! -z "$HTTP_PROXY" ]; then
         BUILD_OPT="$BUILD_OPT  --build-arg HTTP_PROXY=$HTTP_PROXY"
