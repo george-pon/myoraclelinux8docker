@@ -24,6 +24,7 @@ RUN dnf install -y man man-pages && dnf clean all
 RUN dnf install -y \
         bash-completion \
         bind-utils \
+        binutils \
         curl \
         emacs-nox \
         expect \
