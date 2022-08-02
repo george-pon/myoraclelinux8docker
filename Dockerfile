@@ -17,6 +17,10 @@ RUN dnf update -y && dnf upgrade -y && dnf clean all
 # RUN echo 'LANG="ja_JP.UTF-8"' >  /etc/locale.conf
 # ENV LANG ja_JP.UTF-8
 
+# set locale
+RUN dnf install -y glibc-langpack-ja
+ENV LANG ja_JP.UTF-8
+
 # install man, man-pages
 RUN dnf install -y man man-pages && dnf clean all
 
@@ -96,40 +100,40 @@ RUN curl -fLO https://get.helm.sh/helm-${HELM3_VERSION}-linux-amd64.tar.gz && \
 #    rm kompose-linux-amd64.tar.gz
 
 # install stern
-ENV STERN_VERSION 1.11.0
-RUN curl -fLO https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64 && \
-    chmod +x stern_linux_amd64 && \
-    mv stern_linux_amd64 /usr/bin/stern
+# ENV STERN_VERSION 1.11.0
+# RUN curl -fLO https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64 && \
+#     chmod +x stern_linux_amd64 && \
+#     mv stern_linux_amd64 /usr/bin/stern
 
 # install kustomize
-ENV KUSTOMIZE_VERSION 4.4.1
-RUN curl -fLO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
-    tar xvzf kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
-    mv kustomize /usr/bin/kustomize && \
-    rm kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz
+# ENV KUSTOMIZE_VERSION 4.4.1
+# RUN curl -fLO https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
+#     tar xvzf kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && \
+#     mv kustomize /usr/bin/kustomize && \
+#     rm kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz
 
 # install kubectx, kubens. see https://github.com/ahmetb/kubectx
-RUN curl -fLO https://raw.githubusercontent.com/ahmetb/kubectx/master/kubectx && \
-    curl -fLO https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens && \
-    chmod +x kubectx kubens && \
-    mv kubectx kubens /usr/local/bin
+# RUN curl -fLO https://raw.githubusercontent.com/ahmetb/kubectx/master/kubectx && \
+#     curl -fLO https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens && \
+#     chmod +x kubectx kubens && \
+#     mv kubectx kubens /usr/local/bin
 
 # install kubeval ( validate Kubernetes yaml file to Kube-API )
-ENV KUBEVAL_VERSION 0.7.3
-RUN curl -fLO https://github.com/garethr/kubeval/releases/download/$KUBEVAL_VERSION/kubeval-linux-amd64.tar.gz && \
-    tar xf kubeval-linux-amd64.tar.gz && \
-    cp kubeval /usr/local/bin && \
-    /bin/rm kubeval-linux-amd64.tar.gz
+# ENV KUBEVAL_VERSION 0.7.3
+# RUN curl -fLO https://github.com/garethr/kubeval/releases/download/$KUBEVAL_VERSION/kubeval-linux-amd64.tar.gz && \
+#     tar xf kubeval-linux-amd64.tar.gz && \
+#     cp kubeval /usr/local/bin && \
+#     /bin/rm kubeval-linux-amd64.tar.gz
 
 # install kubetest ( lint kubernetes yaml file )
-ENV KUBETEST_VERSION 0.1.1
-RUN curl -fLO https://github.com/garethr/kubetest/releases/download/$KUBETEST_VERSION/kubetest-linux-amd64.tar.gz && \
-    tar xf kubetest-linux-amd64.tar.gz && \
-    cp kubetest /usr/local/bin && \
-    /bin/rm kubetest-linux-amd64.tar.gz
+# ENV KUBETEST_VERSION 0.1.1
+# RUN curl -fLO https://github.com/garethr/kubetest/releases/download/$KUBETEST_VERSION/kubetest-linux-amd64.tar.gz && \
+#     tar xf kubetest-linux-amd64.tar.gz && \
+#     cp kubetest /usr/local/bin && \
+#     /bin/rm kubetest-linux-amd64.tar.gz
 
 # install yamlsort see https://github.com/george-pon/yamlsort
-ENV YAMLSORT_VERSION v0.1.19
+ENV YAMLSORT_VERSION v0.1.20
 RUN curl -fLO https://github.com/george-pon/yamlsort/releases/download/${YAMLSORT_VERSION}/linux_amd64_yamlsort_${YAMLSORT_VERSION}.tar.gz && \
     tar --version && \
     tar xzf linux_amd64_yamlsort_${YAMLSORT_VERSION}.tar.gz --no-same-owner && \
