@@ -12,14 +12,20 @@ RUN sed -i -e"s/^tsflags=nodocs/\# tsflags=nodocs/" /etc/yum.conf
 # update all packages
 RUN dnf update -y && dnf upgrade -y && dnf clean all
 
-# set locale to Japanese
-# RUN localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
-# RUN echo 'LANG="ja_JP.UTF-8"' >  /etc/locale.conf
-# ENV LANG ja_JP.UTF-8
-
-# set locale
-RUN dnf install -y glibc-langpack-ja
+# 言語を日本語に設定、これで日本語ファイル名もちゃんと表示される
+# https://keep-memory.com/podman-centos8-jp podman centos8の日本語化 - numa blog
+RUN dnf -y install glibc-locale-source glibc-langpack-en glibc-langpack-ja && \
+    localedef -i ja_JP -f UTF-8 ja_JP.UTF-8 && \
+    localedef -i ja_JP -f SHIFT_JIS --no-warnings=ascii ja_JP.SJIS && \
+    localedef -i ja_JP -f EUC-JP ja_JP.eucJP && \
+    echo 'LANG="ja_JP.UTF-8"' >  /etc/locale.conf && \
+    dnf clean all
 ENV LANG ja_JP.UTF-8
+
+# set timezone
+RUN echo 'ZONE="Asia/Tokyo"' > /etc/sysconfig/clock && \
+    rm -f /etc/localtime && \
+    ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 # install man, man-pages
 RUN dnf install -y man man-pages && dnf clean all
